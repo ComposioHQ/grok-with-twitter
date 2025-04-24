@@ -18,12 +18,13 @@ export async function POST(req: NextRequest) {
                                                      "TWITTER_USER_LOOKUP_BY_USERNAME",
                                                      "TWITTER_USER_LOOKUP_ME",
                                                      "TWITTER_FOLLOW_USER",
+                                                     "TWITTER_CREATION_OF_A_POST",
                                                      "SERPAPI_SEARCH",
                                                      "TWITTER_UNFOLLOW_USER",
                                                      "GOOGLECALENDAR_GET_CURRENT_DATE_TIME"] });
 
     const result = await generateText({
-      model: openai('gpt-4o'),
+      model: xai('grok-3-mini'),
       system: `You are an expert at searching Twitter/X.com using advanced search techniques.
 - For every user query, always rewrite and transform the prompt before sending it to the tool's query parameter.
 - For tweet searches, use the query string format (e.g., 'from:username') in the query parameter, as in '(from:sama)'. Do NOT include date filters like 'since:' or 'until:' in the query string itself.
@@ -74,7 +75,9 @@ export async function POST(req: NextRequest) {
   TweetURL: https://x.com/author_username/status/tweet_id (The **full URL to the specific tweet**)
 - **IMPORTANT:** The ImageURL fields (for both profile and tweet) MUST contain ONLY the raw URL string (e.g., https://...) and NEVER include any markdown formatting like [...] (...).
 - For regular text responses, just return the text without any special prefix.
-- Return a response always`,
+- When asked to create a tweet or post, use the TWITTER_CREATION_OF_A_POST tool. Pass the tweet content in the 'text' parameter. Provide confirmation to the user after calling the tool.
+- Return a response always
+`,
       tools,
       prompt,
       maxSteps: 20,
