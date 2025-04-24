@@ -8,8 +8,7 @@ interface TweetCardProps {
   displayName?: string; // Add this if you can get it from the backend
   verified?: boolean;   // Add this if you can get it from the backend
   tweetUrl?: string; // Add tweetUrl prop
-  // New: callback to render extra text outside the card
-  onExtraText?: (extra: string) => void;
+  additionalText?: string; // Add additionalText prop
 }
 
 export function TweetCard({
@@ -20,7 +19,7 @@ export function TweetCard({
   displayName,
   verified,
   tweetUrl, // Destructure tweetUrl
-  onExtraText,
+  additionalText, // Destructure additionalText
 }: TweetCardProps) {
   // Format date as "23/04/2025, 08:45" or "14h" if you want relative
   const formattedDate = date
@@ -36,15 +35,15 @@ export function TweetCard({
   // Split text into first line and the rest
   const [firstLine, ...restLines] = text.split(/\r?\n/);
   const extraText = restLines.join("\n").trim();
-  if (onExtraText) onExtraText(extraText);
 
   const cardContent = (
     <div className="flex items-start gap-3 flex-1">
-      <Avatar className="h-12 w-12 flex-shrink-0"> {/* Added flex-shrink-0 */}
-        <AvatarImage src={imageUrl} alt={author} />
-        <AvatarFallback>
-          {author.replace("@", "").slice(0, 2).toUpperCase()}
-        </AvatarFallback>
+      <Avatar className="relative flex size-8 shrink-0 overflow-hidden rounded-full">
+        <AvatarImage 
+          src={imageUrl} 
+          alt={author}
+          className="object-cover"
+        />
       </Avatar>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
@@ -68,6 +67,12 @@ export function TweetCard({
         <div className="mt-1 text-white text-base break-words whitespace-pre-line">
           {firstLine}
         </div>
+        {/* Render additionalText below the main tweet text if it exists */}
+        {additionalText && additionalText.length > 0 && (
+          <div className="mt-2 text-[#a0a2a7] text-sm break-words whitespace-pre-line">
+            {additionalText}
+          </div>
+        )}
       </div>
     </div>
   );

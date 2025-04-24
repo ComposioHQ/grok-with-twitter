@@ -16,7 +16,9 @@ export async function POST(req: NextRequest) {
     console.log(process.env.COMPOSIO_API_KEY)
     const tools = await toolset.getTools({ actions: ["TWITTER_RECENT_SEARCH", 
                                                      "TWITTER_USER_LOOKUP_BY_USERNAME",
+                                                     "TWITTER_USER_LOOKUP_ME",
                                                      "TWITTER_FOLLOW_USER",
+                                                     "SERPAPI_SEARCH",
                                                      "TWITTER_UNFOLLOW_USER",
                                                      "GOOGLECALENDAR_GET_CURRENT_DATE_TIME"] });
 
@@ -26,7 +28,12 @@ export async function POST(req: NextRequest) {
 - For every user query, always rewrite and transform the prompt before sending it to the tool's query parameter.
 - For tweet searches, use the query string format (e.g., 'from:username') in the query parameter, as in '(from:sama)'. Do NOT include date filters like 'since:' or 'until:' in the query string itself.
 - For profile lookups, the query parameter should only be '@username' (e.g., '@_sonith'), with no filters or date ranges in the query string.
+- When using TWITTER_USER_LOOKUP_BY_USERNAME action:
+  - For profile picture lookups, pass only 'profile_image_url' in the user__field parameter
+  - For user ID lookups, pass only 'id' in the user__field parameter
+  - Never pass multiple fields in user__field parameter
 - When referencing Twitter usernames, always include the '@' symbol (e.g., '@elonmusk') in the rewritten query, even if the user omits it.
+- For things you couldn't find directly with twitter search like user bio, use serpapi search
 
 *** CRITICAL DATE HANDLING INSTRUCTIONS FOR TWEET SEARCHES: ***
 1.  **ALWAYS call the GOOGLECALENDAR_GET_CURRENT_DATE_TIME tool FIRST** to get the current accurate date and time before determining dates for a Twitter search.
@@ -50,25 +57,28 @@ export async function POST(req: NextRequest) {
 - Always use these parameter names and types.
 
 ***Output Formatting Instructions:***
-- When returning profile information, structure it like this, starting with PROFILE_CARD::
+- **CRITICAL:** ALWAYS explain the search strategy you used, *including the exact date range calculated and used*, in a short summary at the **VERY TOP** of your response, BEFORE any PROFILE_CARD or TWEET_CARD.
+- When returning profile information, structure it **EXACTLY** like this, starting with PROFILE_CARD::
   PROFILE_CARD::
   Username: @username
   Bio: User bio text...
-  ImageURL: https://x.com/author_username/photo.png
-- When returning tweet information, structure it like this, starting with TWEET_CARD::
+  ImageURL: https://pbs.twimg.com/profile_images/... (full profile image URL - ONLY the raw URL string)
+  ProfileURL: https://x.com/username
+- When returning tweet information, structure it **EXACTLY** like this, starting with TWEET_CARD::
   TWEET_CARD::
   Author: @author_username
   Date: YYYY-MM-DD HH:MM:SS
   Tweet: Full tweet text...
   Additional_Text: Comment based on the tweet
-  ImageURL: https://x.com/author_username/photo.png
-  TweetURL: https://x.com/author_username/status/tweet_id
+  ImageURL: https://pbs.twimg.com/profile_images/... (The **author's profile image URL** - ONLY the raw URL string)
+  TweetURL: https://x.com/author_username/status/tweet_id (The **full URL to the specific tweet**)
+- **IMPORTANT:** The ImageURL fields (for both profile and tweet) MUST contain ONLY the raw URL string (e.g., https://...) and NEVER include any markdown formatting like [...] (...).
 - For regular text responses, just return the text without any special prefix.
-- Always explain the search strategy you used, *including the exact date range calculated and used*, in a short summary at the top of your response.
 - Return a response always`,
       tools,
       prompt,
       maxSteps: 20,
+      temperature: 0.1,
       maxRetries: 20
     });
     console.log(result)
