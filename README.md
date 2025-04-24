@@ -1,28 +1,19 @@
 # Grok with Twitter
 
-A application to display and interact with Twitter content, potentially enhanced with Grok AI insights.
+This application allows you to integrate Grok directly with Twitter with capabilities including Posting a tweet, Follow a profile, Search and Fetch Tweets
 
-## ✨ Features
 
-*   Displays tweets in a clean card format.
-*   Built with modern web technologies.
-*   (Potential) Integration with Grok for tweet analysis or summarization.
+## Prerequisites
 
-## 🚀 Getting Started
-
-Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
-
-### Prerequisites
-
-*   Node.js (Version specified in `.nvmrc` if available, or latest LTS)
+*   Node.js (v18 or later recommended)
 *   npm or yarn
 
-### Installation
+## Setup
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/ComposioHQ/grok-with-twitter.git
-    cd grok-with-twitter
+    git clone <repository-url>
+    cd <repository-directory>
     ```
 
 2.  **Install dependencies:**
@@ -33,42 +24,33 @@ Follow these instructions to get a copy of the project up and running on your lo
     ```
 
 3.  **Set up environment variables:**
-    Create a `.env.local` file in the root directory by copying the example file (if one exists) or creating it manually.
-    ```bash
-    cp .env.example .env.local # If .env.example exists
-    ```
-    Populate `.env.local` with the necessary API keys and configuration values (e.g., Twitter API keys, Grok API keys).
 
-    *Example `.env.local` structure:*
+    Create a file named `.env.local` in the root of the project and add the following variable:
+
     ```env
-    # Twitter API Credentials (replace with actual variables if needed)
-    XAI_API_KEY=your_xai_api_Key
-    COMPOSIO_API_KEY=your_composio_api_key
-
-
+    COMPOSIO_API_KEY=your_composio_api_key_here
+    # You may also need an API key for the AI model provider (e.g., XAI_API_KEY)
+    # Add it here if required by your setup
+    # XAI_API_KEY=your_xai_api_key_here
     ```
 
-4.  **Run the development server:**
-    ```bash
-    npm run dev
-    # or
-    yarn dev
-    ```
+    Replace `your_composio_api_key_here` with your actual Composio API key. If you are using a model provider that requires a separate key (like X AI), uncomment and fill in that line as well.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Running the Application
 
-## 🛠️ Built With
+To start the development server:
 
-*   [Next.js](https://nextjs.org/) - React Framework
-*   [React](https://reactjs.org/) - UI Library
-*   [TypeScript](https://www.typescriptlang.org/) - Typed JavaScript
-*   [Tailwind CSS](https://tailwindcss.com/) - Utility-First CSS Framework
-*   [Shadcn UI](https://ui.shadcn.com/) - Re-usable UI components
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+The application will typically be available at `http://localhost:3000`.
+
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details (if applicable).
