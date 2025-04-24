@@ -405,7 +405,7 @@ export default function Home() {
           // Empty State Content
           <div className="flex-1 flex flex-col justify-center items-center text-center">
             <h1 className="text-3xl font-semibold text-gray-400">Grok + Twitter Search</h1>
-            <p className="mt-2 text-gray-500">Ask anything about Twitter profiles or recent tweets.</p>
+            <p className="mt-2 text-gray-500">Powered by Composio</p>
           </div>
         )}
         {/* Dummy div to ensure scrolling works to the very bottom */}
